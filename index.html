@@ -60,19 +60,32 @@ select option{background:var(--sur)}
 .errbox h3{color:var(--dan);font-size:14px;margin-bottom:8px}
 .errbox p{color:var(--txt);font-size:13px;line-height:1.6;word-break:break-all}
 .errbox button{margin-top:10px;padding:8px 16px;background:var(--dan);color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--mut);margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--bor)}
 .rcard{background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:14px;margin-bottom:10px}
-.rcard h3{font-size:15px;margin-bottom:8px;color:var(--goo)}
-.ritem{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bor);font-size:13px}
+.rcard h3{font-size:15px;margin-bottom:10px;color:var(--goo)}
+.ritem{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--bor);font-size:13px;gap:8px}
 .ritem:last-child{border-bottom:none}
+.ritem-left{flex:1}
+.ritem-name{font-weight:600;margin-bottom:2px}
+.ritem-note{font-size:12px;color:var(--mut);line-height:1.4}
+.ritem-right{text-align:right;flex-shrink:0}
 .cond{display:inline-block;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:700;text-transform:uppercase}
 .cond.ujszeru{background:rgba(125,232,168,0.2);color:var(--goo)}
 .cond.jo{background:rgba(200,245,90,0.2);color:var(--acc)}
 .cond.hasznalt{background:rgba(255,179,71,0.2);color:var(--war)}
 .cond.rossz{background:rgba(255,95,95,0.2);color:var(--dan)}
-.val{color:var(--acc);font-size:12px;font-weight:600;margin-top:2px}
-.warnbox{padding:8px;border-radius:8px;font-size:12px;margin-top:8px}
-.warnbox.dan{background:rgba(255,95,95,0.07);color:var(--dan)}
-.warnbox.war{background:rgba(255,179,71,0.07);color:var(--war)}
+.val{color:var(--acc);font-size:12px;font-weight:600;margin-top:3px}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--bor);font-size:13px}
+.task-item:last-child{border-bottom:none}
+.task-dot{width:6px;height:6px;border-radius:50%;background:var(--war);flex-shrink:0;margin-top:5px}
+.fix-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--bor);font-size:13px}
+.fix-item:last-child{border-bottom:none}
+.fix-dot{width:6px;height:6px;border-radius:50%;background:var(--dan);flex-shrink:0;margin-top:5px}
+.fix-prio{font-size:11px;font-weight:700;padding:1px 6px;border-radius:6px;margin-left:6px}
+.fix-prio.magas{background:rgba(255,95,95,0.2);color:var(--dan)}
+.fix-prio.kozepes{background:rgba(255,179,71,0.2);color:var(--war)}
+.fix-prio.alacsony{background:rgba(200,245,90,0.15);color:var(--acc)}
+.altalanos-box{background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:14px;margin-bottom:10px;font-size:14px;line-height:1.7;color:var(--txt)}
 .sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
 .scard{background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:14px;text-align:center}
 .snum{font-family:'DM Serif Display',serif;font-size:28px;color:var(--acc)}
@@ -138,7 +151,6 @@ select option{background:var(--sur)}
   <div class="sec" id="s2">
     <h1>Szoba <em>felmérése</em></h1>
     <p class="sub">Válassz helyiséget, indítsd a kamerát, vedd fel 10 mp-ben pásztázva a szobát.</p>
-
     <div class="field">
       <label>Helyiség</label>
       <div class="chips">
@@ -152,7 +164,6 @@ select option{background:var(--sur)}
         <div class="chip" onclick="pickRoom(this,'Folyosó')">Folyosó</div>
       </div>
     </div>
-
     <div class="camwrap">
       <video id="video" autoplay playsinline muted></video>
       <div class="camtop">
@@ -160,21 +171,16 @@ select option{background:var(--sur)}
         <div class="cbadge" id="recbadge" style="display:none"><div class="dot rec"></div><span id="rectxt">REC 0s</span></div>
       </div>
     </div>
-
     <div id="timerWrap" style="display:none">
       <div class="tbar"><div class="tfill" id="tfill"></div></div>
       <div class="tlbl" id="tlbl">Felvétel: 0 / 10 mp</div>
     </div>
-
     <canvas id="canvas"></canvas>
-
     <button class="btn bp" id="btnCam" onclick="startCam()">📷 Kamera indítása</button>
     <button class="btn bs" id="btnRec" style="display:none" onclick="startRec()">⏺ 10 mp felvétel indítása</button>
     <button class="btn bs" id="btnStop" style="display:none" onclick="stopRec()">⏹ Leállítás</button>
-
     <div class="divider"></div>
     <button class="btn bs" id="btnReport" style="display:none" onclick="go3()">📋 Riport generálása</button>
-
     <div id="liveArea"></div>
   </div>
 
@@ -196,374 +202,417 @@ select option{background:var(--sur)}
 <div class="toast" id="toast"></div>
 
 <script>
-var KEY = "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";
-
 var D = {
   propName:'', propType:'iskola', inspType:'bekoltozes', inspName:'',
-  room:'Bejárat', rooms:{}, stream:null, recorder:null, chunks:[], timer:null, sec:0
+  room:'Bejárat', rooms:{}, stream:null, recorder:null, chunks:[],
+  timer:null, sec:0, capturedFrames:[], frameTimers:[]
 };
 
-function toast(m) {
-  var t = document.getElementById('toast');
-  t.textContent = m;
-  t.classList.add('show');
-  setTimeout(function(){ t.classList.remove('show'); }, 3500);
-}
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3500);}
 
-function setStep(n) {
-  [1,2,3].forEach(function(i) {
-    document.getElementById('st'+i).className = 'step' + (i<n?' done':i===n?' active':'');
-    document.getElementById('s'+i).className = 'sec' + (i===n?' on':'');
+function setStep(n){
+  [1,2,3].forEach(function(i){
+    document.getElementById('st'+i).className='step'+(i<n?' done':i===n?' active':'');
+    document.getElementById('s'+i).className='sec'+(i===n?' on':'');
   });
   window.scrollTo(0,0);
 }
 
-function go2() {
-  D.propName = document.getElementById('propName').value.trim();
-  D.propType = document.getElementById('propType').value;
-  D.inspType = document.getElementById('inspType').value;
-  D.inspName = document.getElementById('inspName').value.trim();
-  if (!D.propName) { toast('Add meg az ingatlan nevét!'); return; }
+function go2(){
+  D.propName=document.getElementById('propName').value.trim();
+  D.propType=document.getElementById('propType').value;
+  D.inspType=document.getElementById('inspType').value;
+  D.inspName=document.getElementById('inspName').value.trim();
+  if(!D.propName){toast('Add meg az ingatlan nevét!');return;}
   setStep(2);
 }
 
-function go3() {
-  if (Object.keys(D.rooms).length === 0) { toast('Legalább egy szobát fel kell mérni!'); return; }
+function go3(){
+  if(Object.keys(D.rooms).length===0){toast('Legalább egy szobát fel kell mérni!');return;}
   buildSummary();
   setStep(3);
 }
 
-function pickRoom(el, name) {
-  document.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('on'); });
+function pickRoom(el,name){
+  document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});
   el.classList.add('on');
-  D.room = name;
+  D.room=name;
 }
 
-function startCam() {
-  navigator.mediaDevices.getUserMedia({ video:{ facingMode:'environment' }, audio:false })
-    .then(function(s) {
-      D.stream = s;
-      document.getElementById('video').srcObject = s;
-      document.getElementById('cdot').className = 'dot ok';
-      document.getElementById('ctxt').textContent = 'Kamera aktív';
-      document.getElementById('btnCam').style.display = 'none';
-      document.getElementById('btnRec').style.display = 'flex';
+function startCam(){
+  navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false})
+    .then(function(s){
+      D.stream=s;
+      document.getElementById('video').srcObject=s;
+      document.getElementById('cdot').className='dot ok';
+      document.getElementById('ctxt').textContent='Kamera aktív';
+      document.getElementById('btnCam').style.display='none';
+      document.getElementById('btnRec').style.display='flex';
       toast('Kamera kész! Indítsd a felvételt.');
     })
-    .catch(function(e) {
-      showErr('Kamera hozzáférés megtagadva: ' + e.message);
-    });
+    .catch(function(e){showErr('Kamera hozzáférés megtagadva: '+e.message);});
 }
 
-function startRec() {
-  D.chunks = [];
-  D.sec = 0;
+function startRec(){
+  D.chunks=[];D.capturedFrames=[];D.sec=0;
+  D.frameTimers.forEach(function(t){clearTimeout(t);});
+  D.frameTimers=[];
+  [3000,6000,9000].forEach(function(ms){
+    D.frameTimers.push(setTimeout(function(){
+      var canvas=document.getElementById('canvas');
+      var ctx=canvas.getContext('2d');
+      var video=document.getElementById('video');
+      canvas.width=video.videoWidth||1280;
+      canvas.height=video.videoHeight||720;
+      ctx.drawImage(video,0,0);
+      var frame=canvas.toDataURL('image/jpeg',0.6).split(',')[1];
+      if(frame&&frame.length>100)D.capturedFrames.push(frame);
+    },ms));
+  });
 
-  var opts = {};
-  if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) opts = { mimeType:'video/webm;codecs=vp9' };
-  else if (MediaRecorder.isTypeSupported('video/webm')) opts = { mimeType:'video/webm' };
-  else if (MediaRecorder.isTypeSupported('video/mp4')) opts = { mimeType:'video/mp4' };
+  var opts={};
+  if(MediaRecorder.isTypeSupported('video/webm;codecs=vp9'))opts={mimeType:'video/webm;codecs=vp9'};
+  else if(MediaRecorder.isTypeSupported('video/webm'))opts={mimeType:'video/webm'};
+  else if(MediaRecorder.isTypeSupported('video/mp4'))opts={mimeType:'video/mp4'};
 
-  D.recorder = new MediaRecorder(D.stream, opts);
-  D.recorder.ondataavailable = function(e) { if (e.data.size > 0) D.chunks.push(e.data); };
-  D.recorder.onstop = function() {
-    var blob = new Blob(D.chunks, { type: D.recorder.mimeType || 'video/webm' });
-    processVideo(blob);
+  D.recorder=new MediaRecorder(D.stream,opts);
+  D.recorder.ondataavailable=function(e){if(e.data.size>0)D.chunks.push(e.data);};
+  D.recorder.onstop=function(){
+    if(D.capturedFrames.length>0){
+      toast(D.capturedFrames.length+' kép kész — AI elemzés indul...');
+      analyze(D.capturedFrames);
+    } else {
+      var blob=new Blob(D.chunks,{type:D.recorder.mimeType||'video/webm'});
+      processVideo(blob);
+    }
   };
   D.recorder.start();
 
-  document.getElementById('btnRec').style.display = 'none';
-  document.getElementById('btnStop').style.display = 'flex';
-  document.getElementById('recbadge').style.display = 'flex';
-  document.getElementById('timerWrap').style.display = 'block';
+  document.getElementById('btnRec').style.display='none';
+  document.getElementById('btnStop').style.display='flex';
+  document.getElementById('recbadge').style.display='flex';
+  document.getElementById('timerWrap').style.display='block';
 
-  D.timer = setInterval(function() {
+  D.timer=setInterval(function(){
     D.sec++;
-    var pct = (D.sec / 10) * 100;
-    document.getElementById('tfill').style.width = pct + '%';
-    document.getElementById('tlbl').textContent = 'Felvétel: ' + D.sec + ' / 10 mp — pásztázd lassan a szobát!';
-    document.getElementById('rectxt').textContent = 'REC ' + D.sec + 's';
-    if (D.sec >= 10) stopRec();
-  }, 1000);
+    document.getElementById('tfill').style.width=(D.sec/10*100)+'%';
+    document.getElementById('tlbl').textContent='Felvétel: '+D.sec+' / 10 mp — pásztázd lassan a szobát!';
+    document.getElementById('rectxt').textContent='REC '+D.sec+'s';
+    if(D.sec>=10)stopRec();
+  },1000);
 }
 
-function stopRec() {
+function stopRec(){
   clearInterval(D.timer);
-  if (D.recorder && D.recorder.state !== 'inactive') D.recorder.stop();
-  document.getElementById('btnStop').style.display = 'none';
-  document.getElementById('recbadge').style.display = 'none';
-  document.getElementById('tfill').style.width = '100%';
-  document.getElementById('tlbl').textContent = 'Felvétel kész — képkockák kinyerése...';
+  D.frameTimers.forEach(function(t){clearTimeout(t);});
+  if(D.recorder&&D.recorder.state!=='inactive')D.recorder.stop();
+  document.getElementById('btnStop').style.display='none';
+  document.getElementById('recbadge').style.display='none';
+  document.getElementById('tfill').style.width='100%';
+  document.getElementById('tlbl').textContent='Felvétel kész — feldolgozás...';
 }
 
-function processVideo(blob) {
+function processVideo(blob){
   toast('Képkockák kinyerése...');
-  var url = URL.createObjectURL(blob);
-  var vid = document.createElement('video');
-  vid.src = url;
-  vid.muted = true;
-
-  vid.onloadedmetadata = function() {
-    var dur = Math.min(vid.duration, 10);
-    var frames = [];
-    var total = 3;
-    var done = 0;
-    var canvas = document.getElementById('canvas');
-    var ctx = canvas.getContext('2d');
-
-    function grab(i) {
-      if (i >= total) {
-        URL.revokeObjectURL(url);
-        var szKB = Math.round(frames[0].length * 0.75 / 1024);
-  toast(frames.length + ' kép kész (' + szKB + ' KB) — AI elemzés indul...');
-        analyze(frames);
-        return;
-      }
-      var t = total === 1 ? 0 : (i / (total - 1)) * dur;
-      vid.currentTime = t;
-      vid.onseeked = function() {
-        canvas.width = vid.videoWidth || 1280;
-        canvas.height = vid.videoHeight || 720;
-        ctx.drawImage(vid, 0, 0);
-        frames.push(canvas.toDataURL('image/jpeg', 0.6).split(',')[1]);
-        done++;
-        grab(i + 1);
+  var url=URL.createObjectURL(blob);
+  var vid=document.createElement('video');
+  vid.src=url;vid.muted=true;
+  vid.onloadedmetadata=function(){
+    var dur=Math.min(vid.duration,10);
+    var frames=[];var total=3;
+    var canvas=document.getElementById('canvas');
+    var ctx=canvas.getContext('2d');
+    function grab(i){
+      if(i>=total){URL.revokeObjectURL(url);analyze(frames);return;}
+      var t=total===1?0:(i/(total-1))*dur;
+      vid.currentTime=t;
+      vid.onseeked=function(){
+        canvas.width=vid.videoWidth||1280;canvas.height=vid.videoHeight||720;
+        ctx.drawImage(vid,0,0);
+        frames.push(canvas.toDataURL('image/jpeg',0.6).split(',')[1]);
+        grab(i+1);
       };
     }
     grab(0);
   };
-
-  vid.onerror = function() {
+  vid.onerror=function(){
     URL.revokeObjectURL(url);
-    showErr('Videó feldolgozási hiba. Próbálj újra rövidebb felvétellel.');
+    var canvas=document.getElementById('canvas');
+    var ctx=canvas.getContext('2d');
+    var video=document.getElementById('video');
+    canvas.width=video.videoWidth||1280;canvas.height=video.videoHeight||720;
+    ctx.drawImage(video,0,0);
+    var frame=canvas.toDataURL('image/jpeg',0.5).split(',')[1];
+    if(frame&&frame.length>100){analyze([frame]);}
+    else{showErr('Nem sikerült képkockát kinyerni.');}
   };
 }
 
-function setStatus(msg) {
-  var el = document.getElementById('loadStatus');
-  if (el) el.textContent = msg;
+function showLoading(room,count){
+  document.getElementById('liveArea').innerHTML='<div class="spinner-wrap"><div class="spinner"></div><div style="flex:1"><div style="font-size:14px;font-weight:600">AI elemzés folyamatban...</div><div id="loadStatus" style="font-size:12px;color:var(--mut);margin-top:3px">'+room+' · '+count+' képkocka</div></div></div>';
+}
+function setStatus(msg){var el=document.getElementById('loadStatus');if(el)el.textContent=msg;}
+function showErr(msg){
+  document.getElementById('liveArea').innerHTML='<div class="errbox"><h3>Hiba történt</h3><p>'+msg+'</p><button onclick="retryRec()">Újra próbálom</button></div>';
+}
+function retryRec(){
+  document.getElementById('liveArea').innerHTML='';
+  document.getElementById('btnRec').style.display='flex';
+  document.getElementById('timerWrap').style.display='none';
+  document.getElementById('tfill').style.width='0%';
+  D.sec=0;D.capturedFrames=[];
 }
 
-function showLoading(room, count) {
-  var a = document.getElementById('liveArea');
-  a.innerHTML = '<div class="spinner-wrap"><div class="spinner"></div><div style="flex:1"><div style="font-size:14px;font-weight:600">AI elemzés folyamatban...</div><div id="loadStatus" style="font-size:12px;color:var(--mut);margin-top:3px">' + room + ' · ' + count + ' képkocka</div></div></div>';
-}
+function analyze(frames){
+  showLoading(D.room,frames.length);
 
-function showErr(msg) {
-  var a = document.getElementById('liveArea');
-  var old = document.getElementById('loadDiv');
-  if (old) old.remove();
-  a.innerHTML = '<div class="errbox"><h3>Hiba történt</h3><p>' + msg + '</p><button onclick="retryRec()">Újra próbálom</button></div>';
-}
+  var prompt = 'Te egy professzionális ingatlan állapotfelmérő AI vagy. Elemezd részletesen a képeket.\n'
+    + 'Helyiség: ' + D.room + '\n\n'
+    + 'FONTOS SZABÁLYOK:\n'
+    + '- Minden egyes látható tárgyat/eszközt EGYENKÉNT azonosíts (pl. nem "székek" hanem "1 db irodai szék fekete", "2 db fa étkezőszék")\n'
+    + '- Ha nem látod pontosan a darabszámot, becsüld meg\n'
+    + '- Javítandó tételeknél légy specifikus (pl. "bal oldali szekrényajtó hiányzik", "festés sérült az ablak alatt kb 20cm x 30cm területen")\n'
+    + '- Housekeeping feladatok: csak ami a rendezettséghez, tisztasághoz kell (pl. "ablak tisztítás szükséges", "szőnyeg porszívózandó")\n\n'
+    + 'Válaszolj KIZAROLAG valid JSON-ban, semmi mas szoveg:\n'
+    + '{"altalanos_allapot":"A helyiség általános állapotának 2-3 mondatos szakmai leírása, beleértve a hangulatot, tisztaságot, rendezettséget, általános benyomást","housekeeping":["feladat 1","feladat 2"],"eszkozok":[{"nev":"1 db fekete irodai szék","allapot":"jo","becsult_ertek_ft":15000,"megjegyzes":"karfás, állítható magasságú"},{"nev":"1 db íróasztal fehér","allapot":"hasznalt","becsult_ertek_ft":25000,"megjegyzes":"karcolások a felületen"}],"javitando":[{"tetel":"bal oldali szekrényajtó hiányzik","prioritas":"magas","becsult_javitasi_koltseg_ft":8000},{"tetel":"festés sérült az ablak alatt","prioritas":"kozepes","becsult_javitasi_koltseg_ft":15000}]}';
 
-function retryRec() {
-  document.getElementById('liveArea').innerHTML = '';
-  document.getElementById('btnRec').style.display = 'flex';
-  document.getElementById('timerWrap').style.display = 'none';
-  document.getElementById('tfill').style.width = '0%';
-  D.sec = 0;
-}
+  var content=[{type:'text',text:prompt}];
+  frames.forEach(function(f){content.push({type:'image',source:{type:'base64',media_type:'image/jpeg',data:f}});});
 
-function analyze(frames) {
-  showLoading(D.room, frames.length);
+  var ctrl=new AbortController();
+  var tid=setTimeout(function(){ctrl.abort();},60000);
 
-  var prompt = 'Te egy professzionális ingatlan állapotfelmérő AI vagy. Elemezd a képeket.\nHelyiség: ' + D.room + '\nVálaszolj KIZAROLAG valid JSON-ban, semmi mas szoveg:\n{"targyak":[{"nev":"szek","allapot":"jo","becsult_ertek_ft":15000,"megjegyzes":"irodai szek"}],"falak":{"allapot":"jo","szin":"feher","hibak":[]},"padlo":{"tipus":"parketta","allapot":"jo","hibak":[]},"plafon":{"allapot":"jo","hibak":[]},"egyeb_hibak":[],"osszefoglalas":"rovid osszefoglalas"}';
-
-  var content = [{ type:'text', text:prompt }];
-  frames.forEach(function(f) {
-    content.push({ type:'image', source:{ type:'base64', media_type:'image/jpeg', data:f } });
-  });
-
-  setStatus('Kapcsolódás az AI-hoz...');
-
-  var ctrl = new AbortController();
-  var tid = setTimeout(function(){ ctrl.abort(); }, 50000);
-
-  fetch('/api/proxy', {
+  fetch('/api/proxy',{
     method:'POST',
-    headers:{
-      'Content-Type':'application/json'
-    },
-    body: JSON.stringify({
-      model:'claude-haiku-4-5-20251001',
-      max_tokens:1500,
-      messages:[{ role:'user', content:content }]
-    }),
-    signal: ctrl.signal
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:2000,messages:[{role:'user',content:content}]}),
+    signal:ctrl.signal
   })
-  .then(function(r) {
-    clearTimeout(tid);
-    setStatus('Válasz érkezik...');
-    return r.json().then(function(d) { return { ok:r.ok, status:r.status, data:d }; });
+  .then(function(r){
+    clearTimeout(tid);setStatus('Válasz érkezik...');
+    return r.json().then(function(d){return{ok:r.ok,status:r.status,data:d};});
   })
-  .then(function(res) {
-    if (!res.ok) {
-      throw new Error('API hiba (' + res.status + '): ' + (res.data.error && res.data.error.message ? res.data.error.message : JSON.stringify(res.data)));
-    }
-    var text = res.data.content && res.data.content[0] ? res.data.content[0].text : '';
-    if (!text) throw new Error('Üres válasz érkezett');
-    setStatus('JSON feldolgozása...');
-    var clean = text.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
+  .then(function(res){
+    if(!res.ok)throw new Error('API hiba ('+res.status+'): '+(res.data.error&&res.data.error.message?res.data.error.message:JSON.stringify(res.data)));
+    var text=res.data.content&&res.data.content[0]?res.data.content[0].text:'';
+    if(!text)throw new Error('Üres válasz');
+    var clean=text.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
     var parsed;
-    try { parsed = JSON.parse(clean); }
-    catch(e) { throw new Error('JSON hiba. AI válasz: ' + text.substring(0,150)); }
+    try{parsed=JSON.parse(clean);}
+    catch(e){throw new Error('JSON hiba: '+text.substring(0,200));}
     return parsed;
   })
-  .then(function(parsed) {
-    if (!D.rooms[D.room]) D.rooms[D.room] = [];
+  .then(function(parsed){
+    if(!D.rooms[D.room])D.rooms[D.room]=[];
     D.rooms[D.room].push(parsed);
-    showResult(D.room, parsed);
-    document.getElementById('btnReport').style.display = 'flex';
-    document.getElementById('btnReport').textContent = '📋 Riport generálása (' + Object.keys(D.rooms).length + ' szoba kész)';
-    document.getElementById('btnRec').style.display = 'flex';
-    document.getElementById('timerWrap').style.display = 'none';
-    document.getElementById('tfill').style.width = '0%';
-    D.sec = 0;
-    toast('✅ ' + D.room + ' felmérve!');
+    showResult(D.room,parsed);
+    document.getElementById('btnReport').style.display='flex';
+    document.getElementById('btnReport').textContent='📋 Riport generálása ('+Object.keys(D.rooms).length+' szoba kész)';
+    document.getElementById('btnRec').style.display='flex';
+    document.getElementById('timerWrap').style.display='none';
+    document.getElementById('tfill').style.width='0%';
+    D.sec=0;D.capturedFrames=[];
+    toast('✅ '+D.room+' felmérve!');
   })
-  .catch(function(e) {
+  .catch(function(e){
     clearTimeout(tid);
-    var msg = e.name === 'AbortError'
-      ? 'Időtúllépés (50mp). Ellenőrizd az internet kapcsolatot és próbálj újra.'
-      : e.message;
-    showErr(msg);
+    showErr(e.name==='AbortError'?'Időtúllépés. Próbálj újra.':e.message);
   });
 }
 
-function showResult(room, d) {
-  var a = document.getElementById('liveArea');
-  var old = document.querySelector('.spinner-wrap');
-  if (old) old.remove();
-
-  var html = '<div class="rcard"><h3>✓ ' + room + '</h3>';
-  if (d.osszefoglalas) html += '<p style="font-size:13px;color:var(--mut);margin-bottom:10px;line-height:1.5">' + d.osszefoglalas + '</p>';
-
-  if (d.targyak && d.targyak.length > 0) {
-    html += '<div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px">Tárgyak</div>';
-    d.targyak.forEach(function(t) {
-      var cls = t.allapot === 'újszerű' ? 'ujszeru' : t.allapot === 'jó' ? 'jo' : t.allapot === 'rossz' ? 'rossz' : 'hasznalt';
-      html += '<div class="ritem"><div><div>' + t.nev + '</div>' + (t.megjegyzes ? '<div style="font-size:12px;color:var(--mut)">' + t.megjegyzes + '</div>' : '') + '</div><div style="text-align:right"><span class="cond ' + cls + '">' + (t.allapot||'?') + '</span><div class="val">~' + fmt(t.becsult_ertek_ft) + '</div></div></div>';
-    });
-  }
-
-  if (d.falak && d.falak.hibak && d.falak.hibak.length > 0) {
-    html += '<div class="warnbox dan">⚠ Fal: ' + d.falak.hibak.join(' · ') + '</div>';
-  }
-  if (d.padlo && d.padlo.hibak && d.padlo.hibak.length > 0) {
-    html += '<div class="warnbox war">⚠ Padló (' + (d.padlo.tipus||'?') + '): ' + d.padlo.hibak.join(' · ') + '</div>';
-  }
-
-  html += '</div>';
-  a.innerHTML = html;
+function allapotCls(a){
+  if(!a)return 'hasznalt';
+  var l=a.toLowerCase();
+  if(l.includes('j')||l==='jo'||l==='jó')return 'jo';
+  if(l.includes('ú')||l.includes('u'))return 'ujszeru';
+  if(l.includes('r'))return 'rossz';
+  return 'hasznalt';
 }
 
-function buildSummary() {
-  var totI = 0, totV = 0;
-  var html = '';
-  Object.keys(D.rooms).forEach(function(room) {
-    var items = 0, val = 0;
-    D.rooms[room].forEach(function(f) {
-      if (f.targyak) { items += f.targyak.length; f.targyak.forEach(function(t){ val += t.becsult_ertek_ft||0; }); }
+function showResult(room,d){
+  var a=document.getElementById('liveArea');
+  var html='<div class="rcard"><h3>✓ '+room+'</h3>';
+
+  if(d.altalanos_allapot){
+    html+='<div class="section-title">Általános állapot</div>';
+    html+='<div style="font-size:13px;color:var(--txt);line-height:1.6;margin-bottom:4px">'+d.altalanos_allapot+'</div>';
+  }
+
+  if(d.housekeeping&&d.housekeeping.length>0){
+    html+='<div class="section-title">Housekeeping feladatok</div>';
+    d.housekeeping.forEach(function(t){
+      html+='<div class="task-item"><div class="task-dot"></div><div>'+t+'</div></div>';
     });
-    totI += items; totV += val;
-    html += '<div class="rrow"><span>' + room + '</span><span style="color:var(--mut);font-size:13px">' + items + ' tárgy · ~' + fmt(val) + ' <span style="color:var(--goo)">✓</span></span></div>';
+  }
+
+  if(d.eszkozok&&d.eszkozok.length>0){
+    html+='<div class="section-title">Eszközök ('+d.eszkozok.length+' tétel)</div>';
+    d.eszkozok.forEach(function(t){
+      var cls=allapotCls(t.allapot);
+      html+='<div class="ritem"><div class="ritem-left"><div class="ritem-name">'+t.nev+'</div>'+(t.megjegyzes?'<div class="ritem-note">'+t.megjegyzes+'</div>':'')+'</div><div class="ritem-right"><span class="cond '+cls+'">'+(t.allapot||'?')+'</span><div class="val">~'+fmt(t.becsult_ertek_ft)+'</div></div></div>';
+    });
+  }
+
+  if(d.javitando&&d.javitando.length>0){
+    html+='<div class="section-title">⚠ Javítandó tételek ('+d.javitando.length+' db)</div>';
+    d.javitando.forEach(function(j){
+      var pc=j.prioritas==='magas'?'magas':j.prioritas==='kozepes'?'kozepes':'alacsony';
+      html+='<div class="fix-item"><div class="fix-dot"></div><div style="flex:1"><span>'+j.tetel+'</span><span class="fix-prio '+pc+'">'+j.prioritas+'</span>'+(j.becsult_javitasi_koltseg_ft?'<div style="font-size:12px;color:var(--mut);margin-top:2px">Becsült javítás: ~'+fmt(j.becsult_javitasi_koltseg_ft)+'</div>':'')+'</div></div>';
+    });
+  }
+
+  html+='</div>';
+  a.innerHTML=html;
+}
+
+function buildSummary(){
+  var totI=0,totV=0,totF=0;
+  var html='';
+  Object.keys(D.rooms).forEach(function(room){
+    var items=0,val=0,fix=0;
+    D.rooms[room].forEach(function(f){
+      if(f.eszkozok){items+=f.eszkozok.length;f.eszkozok.forEach(function(t){val+=t.becsult_ertek_ft||0;});}
+      if(f.javitando)fix+=f.javitando.length;
+    });
+    totI+=items;totV+=val;totF+=fix;
+    html+='<div class="rrow"><span>'+room+'</span><span style="color:var(--mut);font-size:13px">'+items+' tárgy · '+fix+' javítandó · ~'+fmt(val)+' <span style="color:var(--goo)">✓</span></span></div>';
   });
-  document.getElementById('totI').textContent = totI;
-  document.getElementById('totR').textContent = Object.keys(D.rooms).length;
-  document.getElementById('totV').textContent = Math.round(totV/1000);
-  document.getElementById('summary').innerHTML = html;
+  document.getElementById('totI').textContent=totI;
+  document.getElementById('totR').textContent=Object.keys(D.rooms).length;
+  document.getElementById('totV').textContent=Math.round(totV/1000);
+  document.getElementById('summary').innerHTML=html;
 }
 
-function fmt(n) {
-  if (!n) return '—';
+function fmt(n){
+  if(!n)return '—';
   return new Intl.NumberFormat('hu-HU',{style:'currency',currency:'HUF',maximumFractionDigits:0}).format(n);
 }
 
-function makePDF() {
-  var jsPDF = window.jspdf.jsPDF;
-  var doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
-  var W=210, M=18, y=18;
+function makePDF(){
+  var jsPDF=window.jspdf.jsPDF;
+  var doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  var W=210,M=18,y=18;
+  function chk(n){if(y+(n||10)>275){doc.addPage();y=18;}}
 
-  function chk(n) { if(y+(n||10)>275){ doc.addPage(); y=18; } }
+  // Header
+  doc.setFillColor(15,15,15);doc.rect(0,0,W,36,'F');
+  doc.setTextColor(200,245,90);doc.setFontSize(18);doc.text('ÁLLAPOTFELMÉRÉSI RIPORT',M,15);
+  doc.setTextColor(150,150,150);doc.setFontSize(9);
+  doc.text('ÁllapotFelmérő · AI-alapú dokumentáció',M,22);
+  doc.text('Kelt: '+new Date().toLocaleString('hu-HU'),M,28);
+  doc.text('Felmérő: '+(D.inspName||'—'),M+100,28);
+  y=48;
 
-  doc.setFillColor(15,15,15); doc.rect(0,0,W,36,'F');
-  doc.setTextColor(200,245,90); doc.setFontSize(18);
-  doc.text('ÁLLAPOTFELMÉRÉSI RIPORT', M, 15);
-  doc.setTextColor(150,150,150); doc.setFontSize(9);
-  doc.text('ÁllapotFelmérő · AI-alapú dokumentáció', M, 22);
-  doc.text('Kelt: ' + new Date().toLocaleString('hu-HU'), M, 28);
-  doc.text('Felmérő: ' + (D.inspName||'—'), M+100, 28);
-  y = 48;
+  // Ingatlan adatok
+  var tm={iskola:'Iskola/tanterem',iroda:'Iroda',lakas:'Lakás',szalloda:'Szálloda',onkormanyzat:'Önkormányzat',egyeb:'Egyéb'};
+  var im={bekoltozes:'Beköltözés előtt',kikoltozes:'Kiköltözés után',eves:'Éves leltár',altalanos:'Általános'};
+  doc.setFillColor(26,26,26);doc.rect(M,y,W-2*M,28,'F');
+  doc.setTextColor(200,245,90);doc.setFontSize(9);doc.text('INGATLAN',M+4,y+8);
+  doc.setTextColor(220,220,220);doc.setFontSize(11);doc.text(D.propName,M+4,y+17);
+  doc.setTextColor(120,120,120);doc.setFontSize(9);doc.text((tm[D.propType]||D.propType)+' · '+(im[D.inspType]||D.inspType),M+4,y+24);
+  y+=36;
 
-  doc.setFillColor(26,26,26); doc.rect(M,y,W-2*M,28,'F');
-  doc.setTextColor(200,245,90); doc.setFontSize(9); doc.text('INGATLAN', M+4, y+8);
-  doc.setTextColor(60,60,60); doc.setFontSize(9);
-  var tm = {iskola:'Iskola/tanterem',iroda:'Iroda',lakas:'Lakás',szalloda:'Szálloda',onkormanyzat:'Önkormányzat',egyeb:'Egyéb'};
-  var im = {bekoltozes:'Beköltözés előtt',kikoltozes:'Kiköltözés után',eves:'Éves leltár',altalanos:'Általános'};
-  doc.text(D.propName, M+4, y+16);
-  doc.text((tm[D.propType]||D.propType) + '  ·  ' + (im[D.inspType]||D.inspType), M+4, y+23);
-  y += 36;
-
-  var totI=0,totV=0;
-  Object.values(D.rooms).forEach(function(rs){ rs.forEach(function(f){ if(f.targyak){totI+=f.targyak.length;f.targyak.forEach(function(t){totV+=t.becsult_ertek_ft||0;});}});});
-  var bw=(W-2*M)/3-2;
-  [[totI,'TÁRGY'],[Object.keys(D.rooms).length,'HELYISÉG'],[fmt(totV),'BECSÜLT ÉRTÉK']].forEach(function(item,i){
-    doc.setFillColor(200,245,90); doc.rect(M+i*(bw+2),y,bw,18,'F');
-    doc.setTextColor(15,15,15); doc.setFontSize(14); doc.text(String(item[0]),M+i*(bw+2)+4,y+11);
-    doc.setFontSize(7); doc.text(item[1],M+i*(bw+2)+4,y+17);
+  // Összesítő
+  var totI=0,totV=0,totF=0,totH=0;
+  Object.values(D.rooms).forEach(function(rs){rs.forEach(function(f){
+    if(f.eszkozok){totI+=f.eszkozok.length;f.eszkozok.forEach(function(t){totV+=t.becsult_ertek_ft||0;});}
+    if(f.javitando)totF+=f.javitando.length;
+    if(f.housekeeping)totH+=f.housekeeping.length;
+  });});
+  var bw=(W-2*M)/4-2;
+  [[totI,'TÁRGY'],[Object.keys(D.rooms).length,'HELYISÉG'],[totF,'JAVÍTANDÓ'],[fmt(totV),'BECSÜLT ÉRTÉK']].forEach(function(item,i){
+    doc.setFillColor(i===2&&totF>0?255:200,i===2&&totF>0?95:245,i===2&&totF>0?95:90);
+    doc.rect(M+i*(bw+2),y,bw,18,'F');
+    doc.setTextColor(15,15,15);doc.setFontSize(i===3?10:14);doc.text(String(item[0]),M+i*(bw+2)+3,y+11);
+    doc.setFontSize(7);doc.text(item[1],M+i*(bw+2)+3,y+17);
   });
-  y += 26;
+  y+=26;
 
-  Object.keys(D.rooms).forEach(function(room) {
+  // Szobánként
+  Object.keys(D.rooms).forEach(function(room){
     chk(16);
-    doc.setFillColor(28,28,28); doc.rect(M,y,W-2*M,10,'F');
-    doc.setTextColor(200,245,90); doc.setFontSize(10); doc.text(room.toUpperCase(),M+4,y+7);
-    y += 13;
+    doc.setFillColor(28,28,28);doc.rect(M,y,W-2*M,10,'F');
+    doc.setTextColor(200,245,90);doc.setFontSize(10);doc.text(room.toUpperCase(),M+4,y+7);
+    y+=14;
 
-    D.rooms[room].forEach(function(f) {
-      if (f.osszefoglalas) {
+    D.rooms[room].forEach(function(f){
+
+      // 1. Általános állapot
+      if(f.altalanos_allapot){
+        chk(6);
+        doc.setTextColor(200,245,90);doc.setFontSize(8);doc.text('1. ÁLTALÁNOS ÁLLAPOT',M+2,y);y+=5;
+        doc.setTextColor(180,180,180);doc.setFontSize(8);
+        var ls=doc.splitTextToSize(f.altalanos_allapot,W-2*M-4);
+        doc.text(ls,M+2,y);y+=ls.length*4+6;
+      }
+
+      // 2. Housekeeping
+      if(f.housekeeping&&f.housekeeping.length>0){
         chk(8);
-        doc.setTextColor(130,130,130); doc.setFontSize(8);
-        var ls = doc.splitTextToSize(f.osszefoglalas, W-2*M-8);
-        doc.text(ls,M+4,y); y += ls.length*4+3;
-      }
-      if (f.targyak && f.targyak.length > 0) {
-        f.targyak.forEach(function(t) {
-          chk(7);
-          var cc = {ujszeru:[125,232,168],jo:[200,245,90],'hasznalt':[255,179,71],rossz:[255,95,95]};
-          var cls = t.allapot==='újszerű'?'ujszeru':t.allapot==='jó'?'jo':t.allapot==='rossz'?'rossz':'hasznalt';
-          var col = cc[cls]||[180,180,180];
-          doc.setFillColor(col[0],col[1],col[2]); doc.circle(M+5,y+2,1.5,'F');
-          doc.setTextColor(40,40,40); doc.setFontSize(9); doc.text(t.nev||'?',M+10,y+3);
-          doc.setTextColor(150,150,150); doc.text((t.allapot||'?')+' · ~'+fmt(t.becsult_ertek_ft),M+70,y+3);
-          y += 6;
-          if (t.megjegyzes) { chk(5); doc.setFontSize(8); doc.setTextColor(170,170,170); doc.text(t.megjegyzes.substring(0,90),M+10,y); y+=5; }
+        doc.setTextColor(200,245,90);doc.setFontSize(8);doc.text('2. HOUSEKEEPING FELADATOK',M+2,y);y+=5;
+        f.housekeeping.forEach(function(t){
+          chk(5);
+          doc.setFillColor(255,179,71);doc.circle(M+5,y+1,1.2,'F');
+          doc.setTextColor(160,160,160);doc.setFontSize(8);
+          var ls=doc.splitTextToSize(t,W-2*M-10);
+          doc.text(ls,M+8,y+2);y+=ls.length*4+2;
         });
+        y+=3;
       }
-      if (f.falak && f.falak.hibak && f.falak.hibak.length>0) {
-        chk(7); doc.setFillColor(255,95,95); doc.circle(M+5,y+2,1.5,'F');
-        doc.setTextColor(40,40,40); doc.setFontSize(9);
-        doc.text('Fal: '+f.falak.hibak.join(', ').substring(0,80),M+10,y+3); y+=7;
+
+      // 3. Eszközök
+      if(f.eszkozok&&f.eszkozok.length>0){
+        chk(8);
+        doc.setTextColor(200,245,90);doc.setFontSize(8);doc.text('3. ESZKÖZÖK TÉTELES LISTÁJA',M+2,y);y+=5;
+        f.eszkozok.forEach(function(t){
+          chk(7);
+          var cc={'jo':[200,245,90],'jó':[200,245,90],'ujszeru':[125,232,168],'újszerű':[125,232,168],'hasznalt':[255,179,71],'használt':[255,179,71],'rossz':[255,95,95]};
+          var col=cc[(t.allapot||'').toLowerCase()]||[180,180,180];
+          doc.setFillColor(col[0],col[1],col[2]);doc.circle(M+5,y+2,1.5,'F');
+          doc.setTextColor(220,220,220);doc.setFontSize(9);
+          var nameLines=doc.splitTextToSize(t.nev||'?',W-2*M-50);
+          doc.text(nameLines,M+9,y+3);
+          doc.setTextColor(140,140,140);doc.setFontSize(8);
+          doc.text((t.allapot||'?'),M+130,y+3);
+          doc.setTextColor(200,245,90);doc.text('~'+fmt(t.becsult_ertek_ft),M+150,y+3);
+          y+=nameLines.length*4+2;
+          if(t.megjegyzes){chk(4);doc.setFontSize(7);doc.setTextColor(120,120,120);doc.text(t.megjegyzes.substring(0,90),M+9,y);y+=4;}
+        });
+        y+=3;
       }
-      if (f.padlo && f.padlo.hibak && f.padlo.hibak.length>0) {
-        chk(7); doc.setFillColor(255,179,71); doc.circle(M+5,y+2,1.5,'F');
-        doc.setTextColor(40,40,40); doc.setFontSize(9);
-        doc.text('Padló ('+( f.padlo.tipus||'?')+'): '+f.padlo.hibak.join(', ').substring(0,70),M+10,y+3); y+=7;
+
+      // 4. Javítandók
+      if(f.javitando&&f.javitando.length>0){
+        chk(8);
+        doc.setTextColor(255,95,95);doc.setFontSize(8);doc.text('4. JAVÍTANDÓ TÉTELEK',M+2,y);y+=5;
+        f.javitando.forEach(function(j){
+          chk(7);
+          var pc=j.prioritas==='magas'?[255,95,95]:j.prioritas==='kozepes'?[255,179,71]:[200,245,90];
+          doc.setFillColor(pc[0],pc[1],pc[2]);doc.circle(M+5,y+2,1.5,'F');
+          doc.setTextColor(220,220,220);doc.setFontSize(9);
+          var jLines=doc.splitTextToSize(j.tetel||'?',W-2*M-50);
+          doc.text(jLines,M+9,y+3);
+          if(j.prioritas){doc.setTextColor(pc[0],pc[1],pc[2]);doc.setFontSize(7);doc.text('['+j.prioritas+']',M+150,y+3);}
+          y+=jLines.length*4+2;
+          if(j.becsult_javitasi_koltseg_ft){chk(4);doc.setFontSize(7);doc.setTextColor(120,120,120);doc.text('Becsült javítási költség: ~'+fmt(j.becsult_javitasi_koltseg_ft),M+9,y);y+=4;}
+        });
+        y+=3;
       }
     });
-    y += 4;
+    y+=6;
   });
 
+  // Lábléc
   chk(20);
-  doc.setDrawColor(40,40,40); doc.line(M,y,W-M,y); y+=5;
-  doc.setTextColor(140,140,140); doc.setFontSize(8);
-  doc.text('Ez a riport AI-alapú becsléseket tartalmaz. Az értékek tájékoztató jellegűek.',M,y); y+=10;
-  if (D.inspType==='bekoltozes'||D.inspType==='kikoltozes') {
-    doc.text('Bérbeadó:',M,y); doc.text('Bérlő:',M+90,y);
-    doc.line(M,y+10,M+70,y+10); doc.line(M+90,y+10,M+160,y+10);
+  doc.setDrawColor(40,40,40);doc.line(M,y,W-M,y);y+=5;
+  doc.setTextColor(120,120,120);doc.setFontSize(8);
+  doc.text('Ez a riport AI-alapú becsléseket tartalmaz. Az értékek tájékoztató jellegűek.',M,y);y+=10;
+  if(D.inspType==='bekoltozes'||D.inspType==='kikoltozes'){
+    doc.text('Bérbeadó:',M,y);doc.text('Bérlő:',M+90,y);
+    doc.line(M,y+10,M+70,y+10);doc.line(M+90,y+10,M+160,y+10);
   }
 
-  var fname = 'allapotfelmeres_'+D.propName.replace(/[^a-z0-9]/gi,'_')+'_'+new Date().toISOString().slice(0,10)+'.pdf';
+  var fname='allapotfelmeres_'+D.propName.replace(/[^a-z0-9]/gi,'_')+'_'+new Date().toISOString().slice(0,10)+'.pdf';
   doc.save(fname);
   toast('PDF letöltve!');
 }
