@@ -344,35 +344,38 @@ function analyze(frames){
 
   var prompt='Te egy tapasztalt munkásszálló üzemeltetési vezető vagy, aki szakmai szemmel ellenőriz egy szobát.\n'
     +'Szoba: '+D.propName+' ('+( szobaTipusok[D.propType]||D.propType)+')\n\n'
-    +'FELADATOD:\n'
-    +'Nézd meg a képeket és töltsd ki az alábbi 4 részes riportot.\n\n'
+
+    +'ALAPSZABÁLYOK - EZEKET MINDIG TARTSD BE:\n'
+    +'- CSAK azt jelezd amit BIZTOSAN LÁTSZ a képen. Ha nem egyértelmű, NE jelezd.\n'
+    +'- Mintázatos felület (kő, csempe, tapéta minta, textúrált fal) NEM penész, NEM szennyeződés. Ha nem látod egyértelműen a szennyeződést (nem a mintát), ne jelezd.\n'
+    +'- Ha bizonytalan vagy valamiben, inkább hagyd ki mint téves riasztást küldj.\n'
+    +'- Szennyeződésnél, hibánál mindig add meg a PONTOS HELYET a képen belül: pl. "jobb oldali fal felső sarkában", "ablak alatti párkányon", "ajtótól balra kb. 50 cm-re a falpadlón".\n\n'
 
     +'1. ÁLTALÁNOS ÁLLAPOT\n'
-    +'Írj 2-3 mondatos szakmai összefoglalót az üzemeltetési vezető szemével. '
-    +'Legyél tömör és objektív. Mondj ítéletet: alkalmas-e azonnali bérbeadásra vagy sem.\n\n'
+    +'Írj 2-3 mondatos tömör szakmai összefoglalót. Mondj ítéletet: alkalmas-e azonnali bérbeadásra.\n\n'
 
     +'2. HOUSEKEEPING FELADATOK\n'
-    +'Az alábbi rögzített listából jelöld meg amelyik SZÜKSÉGES (true) és amelyik NEM (false).\n'
-    +'Csak akkor jelölj szükségesnek, ha a képen látható ok indokolja!\n'
+    +'Az alábbi listából csak akkor jelölj szükségesnek (true), ha a képen EGYÉRTELMŰEN látható ok indokolja. Kétség esetén false.\n'
     +hkListaStr+'\n\n'
 
     +'3. BÚTOROK ÉS BERENDEZÉSEK LELTÁRA\n'
     +'CSAK fix berendezési tárgyakat listázz: ágy, matrac, szekrény, fiókos, TV, hűtő, asztal, szék, íróasztal, lámpa, függöny, tükör, polc, fogasok.\n'
-    +'NE listázd: személyes tárgyak, ruha, étel, edény, takaró/párna (csak ha láthatóan hiányzik).\n'
-    +'Állapot értékelés munkásszálló szemmel:\n'
-    +'"jo" = megfelelő állapot, nem zavaró, betölti funkcióját\n'
-    +'"kozepes" = látható kopás/sérülés de még funkcionális, nem sürgős csere\n'
-    +'"rossz" = funkciója sérült VAGY olyan látványos hogy vendégpanaszt okozna\n\n'
+    +'NE listázd: személyes tárgyak, ruha, étel, edény.\n'
+    +'Állapot:\n'
+    +'"jo" = rendben, betölti funkcióját\n'
+    +'"kozepes" = látható kopás de még funkcionális\n'
+    +'"rossz" = funkciója sérült VAGY vendégpanaszt okozna\n\n'
 
     +'4. JAVÍTANDÓ TÉTELEK\n'
-    +'Csak olyan problémát jelezz ami: (a) zavarja az üzemeltetést / vendéget, VAGY (b) biztonsági kockázat.\n'
-    +'Kis kosz, minimális kopás, enyhe folt = NEM javítandó.\n'
-    +'Szembetűnő festéklevállás, lyuk a falon, törött bútor, nem működő lámpa = IGEN javítandó.\n'
-    +'Légy konkrét: ne "fal sérült" hanem "festék levált az ajtó mellett kb. 40x20 cm területen".\n'
-    +'Prioritás: "surgos" (üzemeltetést akadályoz/biztonsági), "kozepes" (vendégpanaszt okozhat), "raer" (következő karbantartásnál elvégezhető).\n\n'
+    +'CSAK akkor jelezz, ha egyértelműen látod a problémát a képen.\n'
+    +'NE jelezd: mintázatos felületet, természetes kopást, bizonytalan árnyékokat, amit csak gyanítasz.\n'
+    +'IGEN jelezd: egyértelmű festéklevállás, törött bútor, lyuk a falon, látható nagy szennyeződés.\n'
+    +'Minden tételnél add meg: (1) mi a probléma, (2) hol van pontosan a képen belül.\n'
+    +'Pl.: "festék levált - jobb oldali fal középső részén, az ablaktól kb. 30 cm-re, kb. 20x15 cm-es folt"\n'
+    +'Prioritás: "surgos" = üzemeltetést akadályoz vagy biztonsági kockázat, "kozepes" = vendégpanaszt okozhat, "raer" = következő karbantartásnál elvégezhető.\n\n'
 
     +'Válaszolj KIZAROLAG valid JSON-ban, semmi mas:\n'
-    +'{"altalanos_allapot":"szakmai összefoglaló 2-3 mondat","alkalmas_berbeadasra":true,"housekeeping":[{"feladat":"Seprés / porszívózás","szukseges":true},{"feladat":"Felmosás","szukseges":false}],"butorok":[{"nev":"1 db egyszemélyes ágy","allapot":"jo","megjegyzes":"stabil, tiszta"}],"javitando":[{"tetel":"festék levált az ajtó mellett kb. 40x20 cm területen","prioritas":"kozepes"}]}';
+    +'{"altalanos_allapot":"szakmai összefoglaló 2-3 mondat","alkalmas_berbeadasra":true,"housekeeping":[{"feladat":"Seprés / porszívózás","szukseges":true},{"feladat":"Felmosás","szukseges":false}],"butorok":[{"nev":"1 db egyszemélyes ágy","allapot":"jo","megjegyzes":"stabil, tiszta"}],"javitando":[{"tetel":"festék levált - jobb oldali fal középső részén az ablaktól kb. 30 cm-re, kb. 20x15 cm-es folt","prioritas":"kozepes"}]}';
 
   var content=[{type:'text',text:prompt}];
   frames.forEach(function(f){content.push({type:'image',source:{type:'base64',media_type:'image/jpeg',data:f}});});
